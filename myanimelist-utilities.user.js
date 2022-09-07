@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyAnimeList Utilities
 // @namespace    https://github.com/wavepr/userscripts
-// @version      0.2.0
+// @version      0.2.1
 // @description  try to take over the world!
 // @author       wavepr
 // @match        https://myanimelist.net/editprofile.php*
@@ -24,26 +24,13 @@
     const notesmde = new EasyMDE({element: document.querySelector('textarea[name="profile_mynotes"]'), spellChecker: false});
 
 
-let mn_elem = document.createElement('div');
+    let mn_elem = document.createElement('div');
     mn_elem.innerHTML = DOMPurify.sanitize(marked.parse(notesmde.value()));
     mn_elem.setAttribute('style', 'margin-bottom: 2rem;')
 
     document.querySelector('textarea[name="profile_mynotes"]').parentNode.prepend(mn_elem);
 
-
     notesmde.codemirror.on("change", () => {
-      mn_elem.innerHTML = DOMPurify.sanitize(marked.parse(notesmde.value()));
+        mn_elem.innerHTML = DOMPurify.sanitize(marked.parse(notesmde.value()));
     });
-
-
-    setTimeout(() => {
-
-
-try {
-
-
-} catch(err) { alert(err)}
-
-    }, 2000);
-
 })();
