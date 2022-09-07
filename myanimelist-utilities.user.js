@@ -18,6 +18,10 @@
 
 
 (function() {
+    let meta_utf = document.createElement('meta');
+    meta_utf.setAttribute("charset", "UTF-8");
+    document.head.appendChild(meta_utf);
+    
     const easymde_css = GM_getResourceText("easymde_css");
     GM_addStyle(easymde_css);
 
