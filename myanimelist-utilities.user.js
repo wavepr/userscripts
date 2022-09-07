@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyAnimeList Utilities
 // @namespace    https://github.com/wavepr/userscripts
-// @version      0.2.1
+// @version      0.2.2
 // @description  try to take over the world!
 // @author       wavepr
 // @match        https://myanimelist.net/editprofile.php*
