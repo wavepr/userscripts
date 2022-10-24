@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Add More Links
 // @namespace    https://github.com/wavepr/userscripts
-// @version      0.1.0
+// @version      0.2.0
 // @author       wavepr
 // @match        https://store.steampowered.com/app/*
 // @grant        none
@@ -29,6 +29,35 @@ window.displayImageLinks = () => {
 		linkHolder.appendChild(ca);
 	});
 };
+
+// window.downloadFile = (path, filename) => {
+// 	// Create a new link
+// 	const anchor = document.createElement("a");
+// 	anchor.href = path;
+// 	anchor.download = filename;
+
+// 	// Append to the DOM
+// 	document.body.appendChild(anchor);
+
+// 	// Trigger `click` event
+// 	anchor.click();
+
+// 	// Remove element from DOM
+// 	document.body.removeChild(anchor);
+// };
+
+// window.downloadMovie = async (url, filename) => {
+// 	let req = await fetch(url, {
+// 		mode: "no-cors",
+// 	});
+// 	// let fblob = await req.blob();
+
+// 	// let dl = URL.createObjectURL(fblob);
+
+// 	// window.downloadFile(dl, filename);
+
+// 	console.log(req, await req.text());
+// };
 
 (function () {
 	"use strict";
@@ -72,7 +101,7 @@ window.displayImageLinks = () => {
 
 		const videoControlsHolder = videoHolder.querySelector(".html5_video_overlay .control_container");
 		try {
-			document.getElementById("video-downloadlinks").parentNode.removeChild(document.getElementById("video-downloadlinks"));
+			document.getElementById("video-downloadlinks-" + evhID).parentNode.removeChild(document.getElementById("video-downloadlinks-" + evhID));
 		} catch (e) {}
 
 		const videoTags = {
@@ -83,16 +112,38 @@ window.displayImageLinks = () => {
 			poster: videoHolder.getAttribute("data-poster"),
 		};
 
+		Object.entries(videoTags).forEach(([k, v]) => {
+			let urlp = new URL(v);
+			videoTags[k] = urlp.origin + urlp.pathname;
+		});
+
 		videoControlsHolder.innerHTML += `
-				<div class="autoplay_label" id="video-downloadlinks">
+				<div class="autoplay_label video-downloadlinks" id="video-downloadlinks-${evhID}">
 					| Download
-					<a href="${videoTags.webm}" target="_blank" rel="noreferrer noopener">WebM</a>&nbsp;
-					<a href="${videoTags.webm_hd}" target="_blank" rel="noreferrer noopener">WebM-HD</a>&nbsp;
-					<a href="${videoTags.mp4}" target="_blank" rel="noreferrer noopener">MP4</a>&nbsp;
-					<a href="${videoTags.mp4_hd}" target="_blank" rel="noreferrer noopener">MP4-HD</a>&nbsp;
-					<a href="${videoTags.poster}" target="_blank" rel="noreferrer noopener">IMG</a>&nbsp;
+					<a href="${videoTags.webm}" target="_blank" rel="noreferrer noopener" download="movie480_vp9_${eID}.webm">WebM</a>&nbsp;
+					<a href="${videoTags.webm_hd}" target="_blank" rel="noreferrer noopener" download="movie_max_vp9_${eID}.webm">WebM-HD</a>&nbsp;
+					<a href="${videoTags.mp4}" target="_blank" rel="noreferrer noopener" download="movie480_${eID}.mp4">MP4</a>&nbsp;
+					<a href="${videoTags.mp4_hd}" target="_blank" rel="noreferrer noopener" download="movie_max_${eID}.mp4">MP4-HD</a>&nbsp;
+					<a href="${videoTags.poster}" target="_blank" rel="noreferrer noopener" download="movie_poster_${eID}.jpg">IMG</a>&nbsp;
+					<a href="#all" data-dl-all style="display:none">DL-ALL</a>&nbsp;
 				</div>
 			`;
+
+		// videoControlsHolder.querySelectorAll("a[download]").forEach((el) => {
+		// 	el.addEventListener("click", (ev) => {
+		// 		ev.preventDefault();
+		// 		ev.stopPropagation();
+		// 		window.downloadMovie(el.href, el.getAttribute("download"));
+		// 	});
+		// });
+
+		// let dlall = videoControlsHolder.querySelector("a[data-dl-all]");
+		// dlall.addEventListener("click", (ev) => {
+		// 	ev.preventDefault();
+		// 	ev.stopPropagation();
+
+		// 	videoControlsHolder.querySelectorAll("a[download]").forEach((el) => window.downloadMovie(ev.href, el.getAttribute("download")));
+		// });
 	}
 	setInterval(() => {
 		setAttributesOnVideo();
